@@ -973,8 +973,8 @@ print_apcli_wds_header(webs_t wp, const char *caption)
 
 	ret += websWrite(wp, caption);
 	ret += websWrite(wp, "----------------------------------------\n");
-	ret += websWrite(wp, "%-19s%-8s%-4s%-4s%-4s%-5s%-5s%-7s%-7s%-5s\n",
-				   "BSSID", "PhyMode", "BW", "MCS", "SGI", "LDPC", "STBC", "TRate", "RxRate", "RSSI");
+	ret += websWrite(wp, "%-19s%-8s%-4s%-4s%-4s%-5s%-5s%-6s%-5s\n",
+				   "BSSID", "PhyMode", "BW", "MCS", "SGI", "LDPC", "STBC", "TRate", "RSSI");
 
 	return ret;
 }

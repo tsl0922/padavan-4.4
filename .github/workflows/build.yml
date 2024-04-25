@@ -10,65 +10,65 @@ on:
         type: choice
         description: 'Please select the model to compile'
         options:
-        - 'B70'
-        - 'BELL-A040WQ'
-        - 'CR660x'
-        - 'DIR-878'
-        - 'DIR-882'
-        - 'EA7500'
-        - 'E8820V2'
-        - 'GHL'
-        - 'JCG-836PRO'
-        - 'JCG-AC860M'
-        - 'JCG-Q20-PB'
-        - 'JCG-Q20'
-        - 'JCG-Y2'
-        - 'K2P-USB'
-        - 'K2P-NANO'
-        - 'K2P'
-        - 'MI-4'
-        - 'MI-R3G'
-        - 'MI-R3P-PB'
-        - 'MI-R3P-SPI'
-        - 'MI-R3P'
-        - 'MI-R4A'
-        - 'MR2600'
-        - 'MSG1500'
-        - 'MSG1500-Z'
-        - 'NETGEAR-BZV'
-        - 'NETGEAR-R6800'
-        - 'NETGEAR-R7450'
-        - 'NEWIFI'
-        - 'NEWIFI3'
-        - 'QM-B1'
-        - 'R2100'
-        - 'RE-CP-02'
-        - 'RE-SP-01B'
-        - 'RM2100'
-        - 'RT-AC85P'
-        - 'TX1801'
-        - 'WR1200JS'
-        - 'XY-C1'
-        - 'ZTE-E8820S'
-        - 'WE410443-TC'
-        - 'HAR-20S2U1'
-        - 'SIM-AX1800T'
-        - 'G-AX1800'
-        - 'WIA3300-10'
-        - 'JCG-Q11Pro'
-        default: 'K2P'
+        - B70
+        - BELL-A040WQ
+        - CR660x
+        - DIR-878
+        - DIR-882
+        - EA7500
+        - E8820V2
+        - G-AX1800
+        - GHL
+        - HAR-20S2U1
+        - JCG-836PRO
+        - JCG-AC860M
+        - JCG-Q11Pro
+        - JCG-Q20
+        - JCG-Q20-PB
+        - JCG-Y2
+        - K2P
+        - K2P-NANO
+        - K2P-USB
+        - MI-4
+        - MI-R3G
+        - MI-R3P-PB
+        - MI-R3P-SPI
+        - MI-R3P
+        - MI-R4A
+        - MR2600
+        - MSG1500
+        - MSG1500-Z
+        - NETGEAR-BZV
+        - NETGEAR-R6800
+        - NETGEAR-R7450
+        - NEWIFI
+        - NEWIFI3
+        - QM-B1
+        - R2100
+        - RE-CP-02
+        - RE-SP-01B
+        - RM2100
+        - RT-AC85P
+        - SIM-AX1800T
+        - TX1801
+        - WE410443-TC
+        - WIA3300-10
+        - WR1200JS
+        - XY-C1
+        - ZTE-E8820S
+        default: K2P
       release:
         type: boolean
         description: 'upload to release'
-        default: 'true'
+        default: true
 jobs:
   build:
     name: ${{ inputs.target }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: hendrikmuhs/ccache-action@v1.2
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@main
+      - uses: hendrikmuhs/ccache-action@main
+      - uses: actions/setup-go@main
         with:
           go-version: '1.22.2'
           check-latest: true
@@ -81,11 +81,11 @@ jobs:
         run: |
           make ${{ inputs.target }}
           echo "TAG_ANME=$(date +%Y%m%d)" >> $GITHUB_ENV
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@main
         with:
           name: ${{ inputs.target }}-${{ env.TAG_ANME }}
           path: trunk/images/*.trx
-      - uses: ncipollo/release-action@v1
+      - uses: ncipollo/release-action@main
         with:
           commit: ${{ github.sha }}
           tag: Padavan

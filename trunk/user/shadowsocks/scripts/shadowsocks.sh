@@ -37,6 +37,7 @@ lan_con=`nvram get lan_con`
 GLOBAL_SERVER=`nvram get global_server`
 socks=""
 SS_RULES=/usr/bin/ss-rules
+[ -x /etc/storage/ss-rules ] && SS_RULES=/etc/storage/ss-rules
 
 log() {
 	logger -t "$NAME" "$@"
@@ -112,7 +113,7 @@ gen_config_file() {
 		sed -i 's/\\//g' $config_file
 		;;
 	trojan)
-		trojan_enable=0
+		trojan_enable=1
 		if [ "$2" = "0" ]; then
 			lua /etc_ro/ss/gentrojanconfig.lua $1 nat 1080 >$trojan_json_file
 			sed -i 's/\\//g' $trojan_json_file
@@ -346,7 +347,6 @@ start_dns_proxy() {
 }
 
 start_dns() {
-	
 	echo "create china hash:net family inet hashsize 1024 maxelem 65536" >/tmp/china.ipset
 	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' /etc/storage/chinadns/chnroute.txt >>/tmp/china.ipset
 	ipset -! flush china
@@ -385,7 +385,6 @@ EOF
 	}
 	case "$run_mode" in
 	router)
-
 		ipset add gfwlist $dnsserver 2>/dev/null
 		# 不论chinadns-ng打开与否，都重启dns_proxy 
 		# 原因是针对gfwlist ipset有一个专有的dnsmasq配置表（由ss-rule创建放在/tmp/dnsmasq.dom/gfwlist_list.conf)
@@ -399,7 +398,6 @@ EOF
 		dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
 		#dnsport=$(echo "$dnsstr" | awk -F '#' '{print $2}')
 		ipset add gfwlist $dnsserver 2>/dev/null
-
 		stop_dns_proxy
 		start_dns_proxy
 		start_chinadns
@@ -419,9 +417,7 @@ EOF
 		ipset add ss_spec_wan_ac $dnsserver 2>/dev/null
 	;;
 	esac
-	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
-	log "DNSmasq 进程已重启..."
 }
 
 start_AD() {
@@ -569,9 +565,7 @@ ssp_close() {
 		rm -f /etc/storage/dnsmasq-ss.d
 	fi
 	clear_iptable
-	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
-	log "DNSmasq 进程已重启..."
 	if [ "$pppoemwan" = 0 ]; then
 		/usr/bin/detect.sh
 	fi
@@ -580,10 +574,10 @@ ssp_close() {
 
 clear_iptable() {
 	s5_port=$(nvram get socks5_port)
-	iptables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT 2>/dev/null
-	iptables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT 2>/dev/null
-	ip6tables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT 2>/dev/null
-	ip6tables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT 2>/dev/null
+	iptables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT
+	iptables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT
+	ip6tables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT
+	ip6tables -t filter -D INPUT -p tcp --dport $s5_port -j ACCEPT
 }
 
 kill_process() {
@@ -686,59 +680,26 @@ ressp() {
 	log "内网IP控制为: $lancons"
 }
 
-check_smsrtdns() {
-	smartdns_process=$(pidof smartdns)
-	if [ -n "$smartdns_process" ] && [ $(nvram get sdns_enable) = 1 ] ; then
-		log "检测到 SmartDNS 已开启,正在重启 SmartDNS..."
-		[ $(pidof smartdns | awk '{ print $1 }')x != x ] && killall -9 smartdns >/dev/null 2>&1
-		/usr/bin/smartdns.sh start
-	fi
-}
-
 case $1 in
 start)
 	if [ $(nvram get ss_adblock) = "1" ]; then
 		start_AD
 	fi
 	ssp_start
-	smartdns_process=$(pidof smartdns)
-	if [ -n "$smartdns_process" ] && [ $(nvram get sdns_enable) = 1 ] ; then
-		sleep 2
-		check_smsrtdns
-	fi
 	echo 3 > /proc/sys/vm/drop_caches
 	;;
 stop)
 	ssp_close
-	dns2tcp_process=$(pidof dns2tcp)
-	smartdns_process=$(pidof smartdns)
-	if [ -n "$dns2tcp_process" ] && [ -n "$smartdns_process" ] && [ $(nvram get sdns_enable) = 1 ] ; then
-		sleep 2
-		check_smsrtdns
-	else
-		if [ -n "$smartdns_process" ] && [ $(nvram get ss_enable) = 0 ] ; then
-			sleep 2
-			check_smsrtdns
-		fi
-	fi
 	echo 3 > /proc/sys/vm/drop_caches
 	;;
 restart)
 	ssp_close
 	ssp_start
-	if [ $(nvram get sdns_enable) = 1 ] ; then
-		sleep 2
-		check_smsrtdns
-	fi
 	echo 3 > /proc/sys/vm/drop_caches
 	;;
 reserver)
 	ssp_close
 	ressp
-	if [ $(nvram get sdns_enable) = 1 ] ; then
-		sleep 2
-		check_smsrtdns
-	fi
 	echo 3 > /proc/sys/vm/drop_caches
 	;;
 *)

@@ -581,6 +581,7 @@ VOID RRM_PeerNeighborReqAction(
 	PMAC_TABLE_ENTRY pEntry;
 	UINT8 DialogToken;
 	PCHAR pSsid = NULL;
+	CHAR ssidbuf[MAX_LEN_OF_SSID+1];
 	UINT8 SsidLen = 0;
 
 	PMEASURE_REQ_ENTRY pMeasure_Entry = NULL;
@@ -633,7 +634,9 @@ VOID RRM_PeerNeighborReqAction(
 
 			if (RRM_PeerNeighborReqSanity(pAd, Elem->Msg, Elem->MsgLen, &DialogToken, &pSsid, &SsidLen)) {
 				DBGPRINT(RT_DEBUG_TRACE, ("DialogToken=%x\n", DialogToken));
-				DBGPRINT(RT_DEBUG_TRACE, ("pSsid=%s\n", pSsid));
+				snprintf(ssidbuf, sizeof(ssidbuf), "%s", pSsid);
+				ssidbuf[SsidLen] = '\0';
+				DBGPRINT(RT_DEBUG_TRACE, ("pSsid=%s\n", /*pSsid*/ssidbuf));
 				DBGPRINT(RT_DEBUG_TRACE, ("SsidLen=%d\n", SsidLen));
 				RRM_EnqueueNeighborRep(pAd, pEntry, DialogToken, pSsid, SsidLen);
 			}

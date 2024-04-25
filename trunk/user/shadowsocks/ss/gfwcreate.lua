@@ -42,4 +42,3 @@ local function generate_gfwlist()
 end
 
 generate_gfwlist()
-	

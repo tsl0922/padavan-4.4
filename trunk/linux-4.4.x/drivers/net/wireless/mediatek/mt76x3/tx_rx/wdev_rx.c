@@ -2995,17 +2995,18 @@ BOOLEAN rtmp_rx_done_handle(RTMP_ADAPTER *pAd)
 			{
 				RXD_STRUC *pRxD = (RXD_STRUC *)&pRxBlk->hw_rx_info[0];
 
-				DBGPRINT(RT_DEBUG_OFF, ("==>%s(): GetFrameFromOtherPorts!\n", __FUNCTION__));
-				hex_dump("hw_rx_info", &rxblk.hw_rx_info[0], sizeof(rxblk.hw_rx_info));
-				DBGPRINT(RT_DEBUG_TRACE, ("Dump the RxD, RxFCEInfo and RxInfo:\n"));
-				hex_dump("RxD", (UCHAR *)pRxD, sizeof(RXD_STRUC));
+				//Disable debug print // simonchen 
+				//DBGPRINT(RT_DEBUG_OFF, ("==>%s(): GetFrameFromOtherPorts!\n", __FUNCTION__));
+				//hex_dump("hw_rx_info", &rxblk.hw_rx_info[0], sizeof(rxblk.hw_rx_info));
+				//DBGPRINT(RT_DEBUG_TRACE, ("Dump the RxD, RxFCEInfo and RxInfo:\n"));
+				//hex_dump("RxD", (UCHAR *)pRxD, sizeof(RXD_STRUC));
 #ifdef RTMP_MAC_PCI
-				dump_rxd(pAd, pRxD);
+				//dump_rxd(pAd, pRxD);
 #endif /* RTMP_MAC_PCI */
-				dumpRxFCEInfo(pAd, pFceInfo);
-				dump_rxinfo(pAd, pRxInfo);
-				hex_dump("RxFrame", (UCHAR *)GET_OS_PKT_DATAPTR(pRxPacket), (pFceInfo->pkt_len));
-				DBGPRINT(RT_DEBUG_OFF, ("<==\n"));
+				//dumpRxFCEInfo(pAd, pFceInfo);
+				//dump_rxinfo(pAd, pRxInfo);
+				//hex_dump("RxFrame", (UCHAR *)GET_OS_PKT_DATAPTR(pRxPacket), (pFceInfo->pkt_len));
+				//DBGPRINT(RT_DEBUG_OFF, ("<==\n"));
 				RELEASE_NDIS_PACKET(pAd, pRxPacket, NDIS_STATUS_SUCCESS);
 				continue;
 			}

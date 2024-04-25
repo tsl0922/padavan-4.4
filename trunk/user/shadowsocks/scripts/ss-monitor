@@ -64,7 +64,7 @@ start_dns_proxy() {
 #TODO 这个监控还可以优化！
 while [ "1" = "1" ]  #死循环
 do 
-	sleep 30
+	sleep 10
 	#redir tcp
 	if [ $redir_tcp_process -gt 0 ] ;then
 		icount=`ps -w | grep ssr-retcp | grep -v grep | wc -l`

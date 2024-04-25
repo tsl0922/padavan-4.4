@@ -63,26 +63,26 @@ UCHAR RtmpEepromGetDefault(
 #ifdef CONFIG_RT_FIRST_CARD_EEPROM
 	if ( pAd->dev_idx == 0 )
 	{
-		if ( RTMPEqualMemory("efuse", CONFIG_RT_FIRST_CARD_EEPROM, 5) )
-			e2p_dafault = E2P_EFUSE_MODE;
+		/*if ( RTMPEqualMemory("efuse", CONFIG_RT_FIRST_CARD_EEPROM, 5) )
+			e2p_default = E2P_EFUSE_MODE;
 		if ( RTMPEqualMemory("prom", CONFIG_RT_FIRST_CARD_EEPROM, 4) )
-			e2p_dafault = E2P_EEPROM_MODE;
-		if ( RTMPEqualMemory("flash", CONFIG_RT_FIRST_CARD_EEPROM, 5) )
-			e2p_dafault = E2P_FLASH_MODE;
-		goto out;	
+			e2p_default = E2P_EEPROM_MODE;
+		if ( RTMPEqualMemory("flash", CONFIG_RT_FIRST_CARD_EEPROM, 5) ) */
+			e2p_default = E2P_FLASH_MODE;
+		goto out;
 	}
 #endif /* CONFIG_RT_FIRST_CARD_EEPROM */
 
 #ifdef CONFIG_RT_SECOND_CARD_EEPROM
 	if ( pAd->dev_idx == 1 )
 	{
-		if ( RTMPEqualMemory("efuse", CONFIG_RT_SECOND_CARD_EEPROM, 5) )
-			e2p_dafault = E2P_EFUSE_MODE;
+		/* if ( RTMPEqualMemory("efuse", CONFIG_RT_SECOND_CARD_EEPROM, 5) )
+			e2p_default = E2P_EFUSE_MODE;
 		if ( RTMPEqualMemory("prom", CONFIG_RT_SECOND_CARD_EEPROM, 4) )
-			e2p_dafault = E2P_EEPROM_MODE;
-		if ( RTMPEqualMemory("flash", CONFIG_RT_SECOND_CARD_EEPROM, 5) )
-			e2p_dafault = E2P_FLASH_MODE;
-		goto out;	
+			e2p_default = E2P_EEPROM_MODE;
+		if ( RTMPEqualMemory("flash", CONFIG_RT_SECOND_CARD_EEPROM, 5) )*/
+			e2p_default = E2P_FLASH_MODE;
+		goto out;
 	}
 #endif /* CONFIG_RT_SECOND_CARD_EEPROM */
 

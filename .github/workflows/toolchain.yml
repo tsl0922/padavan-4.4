@@ -6,28 +6,28 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
       - name: Prepare environment
         run: |
           sudo apt update
-          sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
-            fakeroot kmod cpio git python3-docutils gettext automake autopoint \
+          sudo apt install unzip libtool-bin ccache curl cmake gperf gawk flex bison nano xxd \
+            fakeroot kmod cpio bc zip git python3-docutils gettext automake autopoint \
             texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
             libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
-      - name: Start Build
+      - name: Build toolchain
         run: |
           make toolchain/build
           cd toolchain-mipsel/toolchain-4.4.x
           tar cJf ../mipsel-linux-uclibc-gcc10.tar.xz *
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@main
         with:
           name: toolchain
           path: toolchain-mipsel/mipsel-linux-uclibc-gcc10.tar.xz
-      - uses: svenstaro/upload-release-action@v2
+      - uses: ncipollo/release-action@main
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: toolchain-mipsel/mipsel-linux-uclibc-gcc10.tar.xz
+          token: ${{ github.token }}
           tag: toolchain
-          overwrite: true
+          artifacts: toolchain-mipsel/mipsel-linux-uclibc-gcc10.tar.xz
+          allowUpdates: true

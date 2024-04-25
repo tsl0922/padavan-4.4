@@ -300,7 +300,7 @@ function showMRULESList(){
                                 <div class="row-fluid">
                                     <div id="tabMenu" class="submenuBlock"></div>
 									<div class="alert alert-info" style="margin: 10px;"><input type="button" class="btn btn-success" value="SmartDNS官网" onclick="window.open('https://github.com/pymumu/smartdns')" size="0"><br />
-									</br><#SmartDNS_6#>
+									</br><#SmartDNS_6#><input type="button" id="btn_reconnect" class="btn btn-info" value="<#CTL_refresh#>" onclick="window.location.reload();">
 									</div>
                                 </div>
                                     <div id="wnd_sm_cfg">
