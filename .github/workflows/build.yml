@@ -20,7 +20,7 @@ jobs:
           key: ${{ matrix.target }}-${{ matrix.toolchain }}
       - uses: actions/setup-go@v4
         with:
-          go-version: '1.22'
+          go-version: '1.22.3'
           check-latest: true
           cache: false
       - uses: actions/setup-node@v3
