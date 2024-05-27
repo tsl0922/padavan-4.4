@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        target: [MI-4]
+        target: [K2P]
         toolchain: [mipsel-linux-musl]
     steps:
       - uses: actions/checkout@v3
