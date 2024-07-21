@@ -1,11 +1,11 @@
 include $(ROOTDIR)/rules.mk
 
 PKG_NAME:=xray
-PKG_VERSION:=1.8.19
+PKG_VERSION:=1.8.20
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/XTLS/Xray-core/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=e0a8032519b76c5d04d9f7ebbeefdbb81f30488f84d534a329b109ea2dd96709
+PKG_HASH:=602b04dc305086c3a1206395858e4eff6ccdffc799556521f1d830b3bc715fbc
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/Xray-core-$(PKG_VERSION)
 
