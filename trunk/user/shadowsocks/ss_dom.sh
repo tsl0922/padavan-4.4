@@ -7,5 +7,3 @@ http://repo.or.cz/gfwlist.git/blob_plain/HEAD:/gfwlist.txt
 https://bitbucket.org/gfwlist/gfwlist/raw/HEAD/gfwlist.txt
 https://gitlab.com/gfwlist/gfwlist/raw/master/gfwlist.txt
 https://git.tuxfamily.org/gfwlist/gfwlist.git/plain/gfwlist.txt
-
-1
