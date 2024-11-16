@@ -1,25 +1,37 @@
-include $(ROOTDIR)/rules.mk
+SRC_NAME=libtirpc-1.0.X
 
-PKG_NAME:=libtirpc
-PKG_VERSION:=1.3.5
+all: config_test
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=@SF/$(PKG_NAME)
-PKG_HASH:=9b31370e5a38d3391bf37edfa22498e28fe2142467ae6be7a17c9068ec0bf12f
+config_test:
+	( if [ -f ./config_done ]; then \
+		echo "the same configuration"; \
+	else \
+		make configure && touch config_done; \
+	fi )
 
-PKG_FIXUP:=autoreconf
+configure:
+	( cd $(SRC_NAME) ; \
+	sh autogen.sh ; \
+	./configure \
+		--prefix=$(STAGEDIR) \
+		--enable-shared \
+		--disable-static \
+		--disable-gssapi \
+		--disable-ipv6 \
+		--host=$(HOST_TARGET) \
+		--build=$(HOST_BUILD) ; \
+	)
 
-include $(INCLUDE_DIR)/package.mk
+clean:
+	if [ -f $(SRC_NAME)/Makefile ] ; then \
+		$(MAKE) -C $(SRC_NAME) distclean ; \
+	fi ; \
+	rm -f config_done
 
-CONFIGURE_ARGS += \
-	--enable-shared \
-	--disable-static \
-	--disable-gssapi
-
-$(eval $(call BuildPackage,libtirpc))
+install:
+	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
 
 romfs:
-	$(INSTALL_DIR) $(ROMFSDIR)/lib
-	$(CP) $(PKG_INSTALL_DIR)/lib/libtirpc.so* $(ROMFSDIR)/lib/
-	$(INSTALL_DIR) $(ROMFSDIR)/etc_ro
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/netconfig $(ROMFSDIR)/etc_ro/netconfig
+	cp -fP $(DESTDIR)/lib/libtirpc.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/etc/netconfig $(ROMFSDIR)/etc_ro
