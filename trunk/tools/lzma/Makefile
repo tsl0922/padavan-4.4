@@ -1,9 +1,9 @@
-SRC_NAME=lzma-4.65
+SRC_NAME=lzma2408
 
 all:
-	make -j$(HOST_NCPU) -C $(SRC_NAME)/CPP/7zip/Compress/LZMA_Alone -f makefile.gcc ;\
-	cp $(SRC_NAME)/CPP/7zip/Compress/LZMA_Alone/lzma ./lzma
+	make -j$(HOST_NCPU) -C $(SRC_NAME)/CPP/7zip/Bundles/LzmaCon -f makefile.gcc ;\
+	cp $(SRC_NAME)/CPP/7zip/Bundles/LzmaCon/_o/lzma ./lzma
 
 clean:
-	make -C $(SRC_NAME)/CPP/7zip/Compress/LZMA_Alone -f makefile.gcc clean
+	make -C $(SRC_NAME)/CPP/7zip/Bundles/LzmaCon -f makefile.gcc clean
 	rm -f lzma

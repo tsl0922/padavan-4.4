@@ -1,11 +1,11 @@
 include $(ROOTDIR)/rules.mk
 
 PKG_NAME:=dns2tcp
-PKG_VERSION:=1.1.0
+PKG_VERSION:=1.1.1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/zfl9/dns2tcp/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=31eb878583e6b10bd11300be4307a20e4f611709f0ee5b220bd198b203a62840
+PKG_HASH:=35251fbe1645601086f21cdbd5a2f75471d812f99ed8017bb05158840456b43c
 
 include $(INCLUDE_DIR)/package.mk
 

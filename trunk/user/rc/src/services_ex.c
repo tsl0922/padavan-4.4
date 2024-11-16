@@ -293,14 +293,13 @@ int
 start_dns_dhcpd(int is_ap_mode)
 {
 	FILE *fp;
-	int i_verbose, i_dhcp_enable, is_dhcp_used, is_dns_used, i_filter_aaa;
+	int i_verbose, i_dhcp_enable, is_dhcp_used, is_dns_used,filter_aaaa;
 	char dhcp_start[32], dhcp_end[32], dns_all[64], dnsv6[40];
 	char *ipaddr, *netmask, *gw, *dns1, *dns2, *dns3, *wins, *domain, *dns6;
 	const char *storage_dir = "/etc/storage/dnsmasq";
 
 	i_dhcp_enable = is_dhcpd_enabled(is_ap_mode);
 	i_verbose = nvram_get_int("dhcp_verbose");
-	i_filter_aaa = nvram_get_int("dhcp_filter_aaa");
 
 	ipaddr  = nvram_safe_get("lan_ipaddr");
 	netmask = nvram_safe_get("lan_netmask");
@@ -415,6 +414,11 @@ start_dns_dhcpd(int is_ap_mode)
 		else if (nvram_get_int("wins_enable"))
 			fprintf(fp, "dhcp-option=tag:%s,%d,%s\n", DHCPD_RANGE_DEF_TAG, 44, ipaddr);
 #endif
+#if defined(APP_VLMCSD)
+		int vlmcsd_mode = nvram_get_int("vlmcsd_enable");
+		if ( vlmcsd_mode == 1)	
+			fprintf(fp, "srv-host=%s.%s,%s,%d\n", "_VLMCS", "_tcp", ipaddr, 1688);
+#endif
 		if (i_verbose == 0 || i_verbose == 2)
 			fprintf(fp, "quiet-dhcp\n");
 		
@@ -501,15 +505,12 @@ start_dns_dhcpd(int is_ap_mode)
 
 	fprintf(fp, "conf-file=%s/dnsmasq.conf\n", storage_dir);
 	fclose(fp);
+	doSystem("/usr/bin/dnsmasq.sh");
 	if (is_dns_used)
 		fill_dnsmasq_servers();
 
-	if (is_dns_used || is_dhcp_used) {
-		if (i_filter_aaa == 1)
-			return eval("/usr/sbin/dnsmasq", "--filter-AAAA");
-		else
-			return eval("/usr/sbin/dnsmasq");
-	}
+	if (is_dns_used || is_dhcp_used)
+		return eval("/usr/sbin/dnsmasq");
 
 	return 0;
 }

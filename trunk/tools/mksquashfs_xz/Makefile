@@ -1,41 +1,24 @@
-SRC_NAME1=squashfs-4.3
-SRC_NAME2=xz-5.2.4
+SRC_NAME=squashfs
+#SRC_URL=https://github.com/plougher/squashfs-tools/archive/refs/tags/4.6.1.tar.gz
 
-all: config_xz build_xz build_squashfs
+#all: download_test extract_test
+all: 
+	make -j$(HOST_NCPU) -C $(SRC_NAME) ; \
+	cp $(SRC_NAME)/mksquashfs ./
+	cp $(SRC_NAME)/unsquashfs ./
 
-config_xz:
-	( if [ -f ./config_xz_done ]; then \
-		echo "the same configuration"; \
-	else \
-		make configure_xz && touch config_xz_done; \
+download_test:
+	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
+		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
 	fi )
 
-configure_xz:
-	( cd $(SRC_NAME2) ; \
-	./autogen.sh ; \
-	./configure \
-		--disable-doc \
-		--disable-shared \
-		--disable-werror \
-		--disable-xz \
-		--disable-xzdec \
-		--disable-lzmadec \
-		--disable-lzmainfo \
-		CFLAGS="-std=c99" ; \
-	)
-
-build_xz:
-	make -j$(HOST_NCPU) -C $(SRC_NAME2)
-
-build_squashfs:
-	make -j$(HOST_NCPU) -C $(SRC_NAME1) XZUTILSDIR=$(shell pwd)/$(SRC_NAME2) ; \
-	cp $(SRC_NAME1)/mksquashfs ./
-	cp $(SRC_NAME1)/unsquashfs ./
+extract_test:
+	( if [ ! -d $(SRC_NAME) ]; then \
+		tar zxf $(SRC_NAME).tar.gz; \
+	fi )
 
 clean:
-	if [ -f $(SRC_NAME2)/Makefile ] ; then \
-		make -C $(SRC_NAME2) distclean ; \
+	if [ -f $(SRC_NAME)] ; then \
+		make -C $(SRC_NAME) clean ; \
 	fi
-	make -C $(SRC_NAME1) clean
-	rm -f config_xz_done
 	rm -f mksquashfs unsquashfs

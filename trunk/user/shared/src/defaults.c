@@ -419,7 +419,7 @@ struct nvram_pair router_defaults[] = {
 	{ "hdd_spindt", "0" },
 	{ "hdd_apmoff", "0" },
 
-	{ "ip6_service", "dhcp6" },			/* IPV6 */
+	{ "ip6_service", "" },			/* IPV6 */
 	{ "ip6_wan_if", "0" },
 
 	{ "ip6_6in4_remote", "" },
@@ -436,13 +436,13 @@ struct nvram_pair router_defaults[] = {
 	{ "ip6_wan_size", "64" },
 	{ "ip6_wan_gate", "" },
 
-	{ "ip6_dns_auto", "0" },
+	{ "ip6_dns_auto", "1" },
 	{ "ip6_dns1", "" },
 	{ "ip6_dns2", "" },
 	{ "ip6_dns3", "" },
 
-	{ "ip6_lan_auto", "0" },
-	{ "ip6_lan_addr", "" },
+	{ "ip6_lan_auto", "1" },
+	{ "ip6_lan_addr", "fc00:101:101::1" },
 	{ "ip6_lan_size", "64" },
 	{ "ip6_lan_radv", "1" },
 	{ "ip6_lan_dhcp", "1" },
@@ -585,10 +585,11 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_watchcat", "1" },
 	{ "lan_con", "0" },
 	{ "ss_chnroute_url", "https://ispip.clang.cn/all_cn.txt"},
+    { "ss_gfwlist_url", "https://cdn.jsdelivr.net/gh/YW5vbnltb3Vz/domain-list-community@release/gfwlist.txt"},
 	{ "ss_adblock_url", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf"},
 	{ "ss_schedule_enable", "0" },
 	{ "ss_schedule", "00000000000" },
-
+	
 	{ "ss_enable", "0" },
 	{ "ss_mode", "1" },
 	{ "ss_server", "127.0.0.1" },
@@ -1046,7 +1047,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ether_flow_lan7", "0" },
 #endif
 #endif
-	{ "hw_nat_mode", "1" },
+	{ "hw_nat_mode", "0" },
 	{ "sw_nat_mode", "0" },
 #if defined(USE_SFE)
 	{ "sfe_enable", "2" },

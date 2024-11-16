@@ -364,6 +364,22 @@ get_eeprom_params(void)
 		}
 		
 		nvram_wlan_set_int(1, "txbf_en", (count_0xff == 33) ? 0 : 1);
+		
+		if(count_0xff !=33)	
+		{
+		 count_0xff = 0;
+		i_ret = flash_mtd_read(MTD_PART_NAME_FACTORY, 0x81A0, txbf_para, 33);
+		if (i_ret < 0) {
+			dbg("READ TXBF PARA address: Out of scope\n");
+		} else {
+			for (i = 0; i < 33; i++) {
+				if (txbf_para[i] == 0xff)
+					count_0xff++;
+			}
+		}
+		
+		nvram_wlan_set_int(1, "txbf_en", (count_0xff == 33) ? 0 : 1);
+		}
 	}
 
 }

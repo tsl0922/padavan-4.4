@@ -2,9 +2,7 @@ KERNELZ		= $(IMAGEDIR)/zImage
 RAMDISK		= $(IMAGEDIR)/ramdisk
 IMAGE		= $(IMAGEDIR)/$(CONFIG_FIRMWARE_PRODUCT_ID)_$(FIRMWARE_KERNEL_VER).$(FIRMWARE_ROOTFS_VER)-$(FIRMWARE_BUILDS_VER).trx
 BOARD_DIR	= $(ROOTDIR)/configs/boards/$(CONFIG_FIRMWARE_PRODUCT_ID)
-ROMFS_DIR	= $(ROOTDIR)/romfs
-MKIMAGE_DIR	:= $(ROOTDIR)/tools/mkimage
-CUR_DIR		= $(shell pwd)
+
 ifeq ($(CONFIG_KERNEL_NO_COMPRESS),y)
 COMP		= none
 else
@@ -24,7 +22,7 @@ LOAD_ADDR = 80000000
 endif
 
 ifeq ($(CONFIG_WITHOUT_KERNEL),y)
-ENTRY_CMD = $(MKIMAGE_DIR)/mkimage -l $(UBOOT_HEADER) 2>/dev/null |grep "Entry" |awk '{print $$3}'
+ENTRY_CMD = $(MKIMAGE_TOOL) -l $(UBOOT_HEADER) 2>/dev/null |grep "Entry" |awk '{print $$3}'
 else
 ENTRY_CMD = readelf -h $(ROOTDIR)/$(LINUXDIR)/vmlinux | grep "Entry" | awk '{print $$4}'
 endif
@@ -67,7 +65,7 @@ romfs.post::
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	rm -f $(RAMDISK)
 	rm -f $(KERNELZ).*
-	$(ROOTDIR)/tools/mksquashfs_xz/mksquashfs $(ROMFSDIR) $(RAMDISK) -all-root -no-exports -noappend -nopad -noI -no-xattrs -b 1M
+	$(MKSQUASHFS_TOOL) $(ROMFSDIR) $(RAMDISK) -all-root -no-exports -noappend -nopad -noI -no-xattrs -b 1M
 
 image:
 	##############CREATE IMAGE#################
@@ -79,7 +77,7 @@ else
 ifeq ($(CONFIG_KERNEL_NO_COMPRESS),y)
 	cd $(IMAGEDIR); rm -f $(KERNELZ).*; mv -f $(KERNELZ) $(KERNELZ).$(COMP)
 else
-	cd $(IMAGEDIR); rm -f $(KERNELZ).*; $(ROOTDIR)/tools/lzma/lzma e -a1 -d25 $(KERNELZ) $(KERNELZ).$(COMP)
+	cd $(IMAGEDIR); rm -f $(KERNELZ).*; $(LZMA_TOOL) e -a1 -d25 $(KERNELZ) $(KERNELZ).$(COMP)
 endif
 endif
 	@SIZE=`wc -c $(KERNELZ).$(COMP) | awk '{ print $$1 }'` ; \
@@ -101,5 +99,5 @@ endif
 	ISIZE=`wc -c $(KERNELZ).$(COMP) | awk '{print $$1}'` ; \
 	RSIZE=`wc -c $(RAMDISK) | awk '{print $$1}'` ; \
 	KRN_SIZE=`expr $$ISIZE - $$RSIZE + 64` ; \
-	$(MKIMAGE_DIR)/mkimage -A mips -O linux -T kernel -C $(COMP) -a $(LOAD_ADDR) -e $$ENTRY -k $$KRN_SIZE \
+	$(MKIMAGE_TOOL) -A mips -O linux -T kernel -C $(COMP) -a $(LOAD_ADDR) -e $$ENTRY -k $$KRN_SIZE \
 	-n $(CONFIG_FIRMWARE_PRODUCT_ID) -V $(FIRMWARE_KERNEL_VER) $(FIRMWARE_ROOTFS_VER) -d $(KERNELZ).$(COMP) $(IMAGE)

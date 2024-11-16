@@ -79,6 +79,9 @@ bool chacha20poly1305_encrypt_sg_inplace(struct scatterlist *src,
 					 const u8 key[CHACHA20POLY1305_KEY_SIZE],
 					 simd_context_t *simd_context)
 {
+#ifdef ISPADAVAN
+	unsigned long flags;
+#endif
 	struct poly1305_ctx poly1305_state;
 	struct chacha20_ctx chacha20_state;
 	struct sg_mapping_iter miter;
@@ -103,6 +106,9 @@ bool chacha20poly1305_encrypt_sg_inplace(struct scatterlist *src,
 	poly1305_update(&poly1305_state, pad0, (0x10 - ad_len) & 0xf,
 			simd_context);
 
+#ifdef ISPADAVAN
+	local_irq_save(flags);
+#endif
 	sg_miter_start(&miter, src, sg_nents(src), SG_MITER_TO_SG | SG_MITER_ATOMIC);
 	for (sl = src_len; sl > 0 && sg_miter_next(&miter); sl -= miter.length) {
 		u8 *addr = miter.addr;
@@ -154,6 +160,9 @@ bool chacha20poly1305_encrypt_sg_inplace(struct scatterlist *src,
 			       simd_context);
 
 	sg_miter_stop(&miter);
+#ifdef ISPADAVAN
+	local_irq_restore(flags);
+#endif
 
 	if (unlikely(sl > -POLY1305_MAC_SIZE)) {
 		poly1305_final(&poly1305_state, b.mac, simd_context);
@@ -236,6 +245,9 @@ bool chacha20poly1305_decrypt_sg_inplace(struct scatterlist *src,
 					 const u8 key[CHACHA20POLY1305_KEY_SIZE],
 					 simd_context_t *simd_context)
 {
+#ifdef ISPADAVAN
+	unsigned long flags;
+#endif
 	struct poly1305_ctx poly1305_state;
 	struct chacha20_ctx chacha20_state;
 	struct sg_mapping_iter miter;
@@ -265,6 +277,9 @@ bool chacha20poly1305_decrypt_sg_inplace(struct scatterlist *src,
 	poly1305_update(&poly1305_state, pad0, (0x10 - ad_len) & 0xf,
 			simd_context);
 
+#ifdef ISPADAVAN
+	local_irq_save(flags);
+#endif
 	sg_miter_start(&miter, src, sg_nents(src), SG_MITER_TO_SG | SG_MITER_ATOMIC);
 	for (sl = src_len; sl > 0 && sg_miter_next(&miter); sl -= miter.length) {
 		u8 *addr = miter.addr;
@@ -318,6 +333,9 @@ bool chacha20poly1305_decrypt_sg_inplace(struct scatterlist *src,
 	}
 
 	sg_miter_stop(&miter);
+#ifdef ISPADAVAN
+	local_irq_restore(flags);
+#endif
 
 	if (unlikely(sl > -POLY1305_MAC_SIZE)) {
 		poly1305_final(&poly1305_state, b.computed_mac, simd_context);

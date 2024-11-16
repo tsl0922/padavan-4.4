@@ -544,6 +544,7 @@ void update_dlink(void);
 void reset_dlink(void);
 #endif
 #if defined(APP_VLMCSD)
+int is_vlmcsd_run(void);
 void stop_vlmcsd(void);
 void start_vlmcsd(void);
 void restart_vlmcsd(void);

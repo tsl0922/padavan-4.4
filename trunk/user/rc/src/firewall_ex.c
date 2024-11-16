@@ -691,7 +691,7 @@ include_masquerade(FILE *fp, char *wan_if, char *wan_ip, char *lan_net, int is_f
 static int
 is_need_tcp_mss_wan(int unit, int wan_proto, char *man_if)
 {
-	if (get_usb_modem_wan(unit) ) {
+	/*if (get_usb_modem_wan(unit) ) {
 		int modem_mtu = nvram_safe_get_int("modem_mtu", 1500, 1000, 1500);
 		if (modem_mtu != 1500)
 			return 1;
@@ -703,9 +703,9 @@ is_need_tcp_mss_wan(int unit, int wan_proto, char *man_if)
 		
 		if (get_interface_mtu(man_if) != 1500)
 			return 1;
-	}
+	}*/
 
-	return 0;
+	return 1;
 }
 
 static char *

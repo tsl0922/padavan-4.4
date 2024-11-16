@@ -1,0 +1,11 @@
+diff -urN util-linux-2.39.3-ref/sys-utils/setarch.c util-linux-2.39.3/sys-utils/setarch.c
+--- util-linux-2.39.3-ref/sys-utils/setarch.c	2024-05-13 14:45:00.963075655 +0000
++++ util-linux-2.39.3/sys-utils/setarch.c	2024-05-13 14:48:14.323040107 +0000
+@@ -103,7 +103,6 @@
+     X(PER_SUNOS) \
+     X(PER_XENIX) \
+     X(PER_LINUX32) \
+-    X(PER_LINUX32_3GB) \
+     X(PER_IRIX32) \
+     X(PER_IRIXN32) \
+     X(PER_IRIX64) \

@@ -1,15 +1,67 @@
 # padavan #
 
+### 基于TSL大佬的padavan4.4版本，做了一些自己的缝合和优化，比较适合养老！ 支持一键action编译自己的定制固件，插件增删在trunk/configs/tempaltes修改！
+- 科学上网做了很多的优化，gfw和绕过模式+chinadns-ng都能正常使用，gfw列表更新地址也放出来可以设置。
+- zerotier和frpc都更新到最新，都正常使用。异地组网的好搭档。
+- ipv6正常使用，ipv6不支持nat！
+- hwnat硬加速和sfe软加速都有效果！
+- 去除了很多log里刷屏的内核日志！
+- 升级了很多软件的版本！
+- 回滚了部分软件版本，解决版本不稳定的问题！
+
+zerotier 使用技巧：
+
+- 1、ap模式下如果想要其他zerotier端可以访问ap网段，在padavan开机脚本里开启ap模式下的ip转发功能，虚拟网段改成你自己实际的。
+```
+sysctl -w net.ipv4.ip_forward=1
+iptables -t nat -A POSTROUTING -s 10.11.12.0/24 -j MASQUERADE
+```
+- 2、解决当wan重拨号或其他原因，导致zerotier防火墙规则丢失，zerotier网络无法正常使用。可以在padavan设置 WAN 上行/下行启动后执行 加入下面的脚本。 切记不要放防火墙重启后里，测试有重启进不去系统的可能！！
+```
+if [ $1 == "up" ] ; then
+SleepTime=30
+logger -t "WAN状态改变" "【延时$SleepTime秒检测ZeroTier状态】"
+sleep $SleepTime
+KEYWORD="zte"
+RULE_EXIST=$(iptables -L -n -v | grep "$KEYWORD")
+NVRAM_ZEROTIER_ENABLE=$(nvram get zerotier_enable)
+if [ -z "$RULE_EXIST" ]; then
+    if [ "$NVRAM_ZEROTIER_ENABLE" = "1" ]; then
+        logger -t "检测结果" "【ZeroTier防火墙规则不存在，但服务已启用，需要重启服务！】"
+        zerotier.sh stop && zerotier.sh start
+    else
+        logger -t "检测结果" "【ZeroTier防火墙规则不存在，但服务未启用，不需要重启服务！】"
+    fi
+else
+    logger -t "检测结果" "【ZeroTier防火墙规则存在，不需要重启服务！】"    
+fi
+fi
+```
+默认信息如下
+- ip：192.168.2.1
+- 账号：admin
+- 密码：admin
+- wifi密码：1234567890
+![image](https://github.com/user-attachments/assets/c9e7f317-22d3-47a5-91a7-12b084992a47)
+![image](https://github.com/user-attachments/assets/eca3da71-3b7f-4ef0-b5cf-a0f12be536bb)
+![image](https://github.com/user-attachments/assets/aad24ef7-633c-4576-a215-ea68e3b829a0)
+![image](https://github.com/user-attachments/assets/215423ac-cef8-4f25-a7d2-b4942c427193)
+![image](https://github.com/user-attachments/assets/90e0471d-4842-4c6d-b39d-cbc94b4a17f2)
+
+
+
 This project is based on original rt-n56u with latest mtk 4.4.198 kernel, which is fetch from D-LINK GPL code.
 
+#### Extra functions / changes
+- AP Relay auto-daemon
 ##### Enhancements in this repo
 
 - commits has beed rewritten on top of [hanwckf/rt-n56u](https://github.com/hanwckf/rt-n56u) repo for better history tracking
 - Optimized Makefiles and build scripts, added a toplevel Makefile
 - Added ccache support, may save up to 50%+ build time
 - Upgraded the toolchain and libc:
-  - gcc 13.2.0
-  - musl 1.2.4
+  - gcc 13.3.0
+  - musl 1.2.5 / uClibc-ng 1.0.48
  - OpenWrt style package Makefile
  - Enabled kernel cgroups support
  - Fixed K2P led label names
@@ -49,66 +101,3 @@ This project is based on original rt-n56u with latest mtk 4.4.198 kernel, which 
 - MI-R3P
 - R2100
 - XY-C1
-
-# Compilation steps
-
-- Install dependencies
-  ```sh
-  # Debian/Ubuntu
-  sudo apt install unzip libtool-bin ccache curl cmake gperf gawk flex bison nano xxd \
-      fakeroot kmod cpio bc zip git python3-docutils gettext automake autopoint \
-      texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
-      libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
-  ```
-  **Optional:**
-  - install [golang](https://go.dev/doc/install) for building go programs
-    ```sh
-    sudo rm -rf /usr/local/go
-    curl -fsSL https://go.dev/dl/go1.20.10.linux-amd64.tar.gz | sudo tar -C /usr/local -xz
-    echo "export PATH=\$PATH:/usr/local/go/bin" | sudo tee /etc/profile.d/go.sh
-    source /etc/profile.d/go.sh
-    go version
-    ```
-  - install [nodejs](https://nodejs.org/en/download) for building [AdGuardHome](trunk/user/adguardhome)
-    ```sh
-    sudo apt update
-    sudo apt install -y ca-certificates curl gnupg
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-    sudo apt update
-    sudo apt install -y nodejs
-    node -v
-    ```
-- Clone source code
-  ```sh
-  git clone https://github.com/tsl0922/padavan.git
-  ```
-- Modify template file and start compiling
-  ```sh
-  # (Optional) Modify template file
-  # vi trunk/configs/templates/K2P.config
-
-  # Start compiling with: make PRODUCT_NAME
-  make K2P
-
-  # To build firmware for other devices, clean the tree after previous build
-  make clean
-  ```
-
-# Package Development
-
-- Makefile examples
-  - [Makefile project](trunk/libs/libpcre/Makefile) 
-  - [CMake project](trunk/user/ttyd/Makefile)
-- Compiling a single package (cd to `trunk` first)
-  - build: `make libs/libpcre_only`
-  - clean: `make libs/libpcre_clean`
-  - romfs: `make libs/libpcre_romfs`
-
-# Manuals
-
-- Controlling GPIO and LEDs via sysfs
-- How to use NAND RWFS partition
-- How to use IPv6 NAT and fullcone NAT
-- How to add new device support with device tree

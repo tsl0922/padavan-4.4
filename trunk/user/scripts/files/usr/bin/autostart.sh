@@ -4,6 +4,15 @@
 mkdir -p /tmp/dnsmasq.dom
 logger -t "为防止dnsmasq启动失败，创建/tmp/dnsmasq.dom/"
 
+# ap relay monitor [simonchen]
+if [ ! -x /etc/storage/sh_ezscript.sh ]; then
+	cp /usr/bin/sh_ezscript.sh /etc/storage/sh_ezscript.sh
+fi
+if [ -x /etc/storage/ap_script.sh ]; then
+	/etc/storage/ap_script.sh >/dev/null 2>&1 &
+else
+	cp /usr/bin/ap_script.sh /etc/storage/ap_script.sh
+fi
 smartdns_conf="/etc/storage/smartdns_custom.conf"
 dnsmasq_Conf="/etc/storage/dnsmasq/dnsmasq.conf"
 smartdns_Ini="/etc/storage/smartdns_conf.ini"

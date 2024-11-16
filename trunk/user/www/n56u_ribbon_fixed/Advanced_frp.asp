@@ -148,9 +148,9 @@ function done_validating(action){
 									<tr> <th>frpc<#running_status#></th>
                                             <td id="frpc_status" colspan="2"></td>
                                         </tr>
-										<tr> <th>frps<#running_status#></th>
+										<!-- <tr> <th>frps<#running_status#></th>
                                             <td id="frps_status" colspan="2"></td>
-                                        </tr>
+                                        </tr> -->
 										<tr>
 											<th width="30%"><a class="help_tooltip" href="javascript: void(0)" onmouseover="openTooltip(this, 26, 9);">启用frpc</a></th>
 											<td>
@@ -165,7 +165,7 @@ function done_validating(action){
 												</div>
 											</td>
 										</tr>
-												<tr>
+												<!-- <tr>
 											<th width="30%"><a class="help_tooltip" href="javascript: void(0)" onmouseover="openTooltip(this, 26, 9);">启用frps</a></th>
 											<td>
 													<div class="main_itoggle">
@@ -178,7 +178,7 @@ function done_validating(action){
 													<input type="radio" value="0" name="frps_enable" id="frps_enable_0" class="input" value="0"  <% nvram_match_x("", "frps_enable", "0", "checked"); %> /><#checkbox_No#>
 												</div>
 											</td>
-										</tr>
+										</tr> -->
 										<tr id="row_post_wan_script">
 											<td colspan="2">
 												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>frp脚本-请自行配置脚本里的相关参数</span></a>

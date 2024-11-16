@@ -1371,8 +1371,8 @@ wan_up(char *wan_ifname, int unit, int is_static)
 	/* call custom user script */
 	if (check_if_file_exist(script_postw))
 		{doSystem("%s %s %s %s", script_postw, "up", wan_ifname, wan_addr);}
-	if (nvram_match("zerotier_enable", "1"))
-		{doSystem("/usr/bin/zerotier.sh start");}
+	//if (nvram_match("zerotier_enable", "1"))
+	//	{doSystem("/usr/bin/zerotier.sh start");}
 	if (nvram_match("pppoemwan_enable", "1"))
 		{doSystem("/usr/bin/detect.sh");}
 }
@@ -2590,7 +2590,7 @@ int start_udhcpc_wan(char *wan_ifname, int unit, int wait_lease)
 		"-t4",
 		"-T4",
 		NULL,
-		NULL, NULL,	/* -H hostname		*/
+		NULL, NULL,	/* -x hostname:hostname */
 		NULL, NULL,	/* -V vendorclass	*/
 		NULL,		/* -O mtu		*/
 		NULL,		/* -O routes		*/
@@ -2617,8 +2617,10 @@ int start_udhcpc_wan(char *wan_ifname, int unit, int wait_lease)
 
 	wan_hostname = get_wan_unit_value(unit, "hostname");
 	if (strlen(wan_hostname) > 0) {
-		dhcp_argv[index++] = "-H";
-		dhcp_argv[index++] = sanity_hostname(wan_hostname);
+		dhcp_argv[index++] = "-x";
+		char wan_mergedhostname[26] = "hostname:";
+		strncat(wan_mergedhostname, sanity_hostname(wan_hostname), sizeof(wan_mergedhostname) - strlen(wan_mergedhostname) - 1);
+		dhcp_argv[index++] = wan_mergedhostname;
 	}
 
 	wan_vci = get_wan_unit_value(unit, "vci");
@@ -2732,4 +2734,3 @@ int stop_udhcpc_viptv(void)
 	snprintf(pidfile, sizeof(pidfile), "/var/run/udhcpc_viptv.pid");
 	return kill_pidfile(pidfile);
 }
-

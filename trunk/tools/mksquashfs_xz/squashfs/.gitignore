@@ -1,0 +1,6 @@
+*.1
+*.o
+mksquashfs
+sqfscat
+sqfstar
+unsquashfs

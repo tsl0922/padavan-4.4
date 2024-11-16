@@ -901,6 +901,10 @@ validate_asp_apply(webs_t wp, int sid)
 			} else if (!strncmp(v->name, "scripts.", 8)) {
 				if (write_textarea_to_file(value, STORAGE_SCRIPTS_DIR, file_name))
 					restart_needed_bits |= event_mask;
+				if (!strcmp(file_name, "ap_script.sh"))
+				{
+					doSystem("/etc/storage/ap_script.sh");
+				}
 			} else if (!strncmp(v->name, "crontab.", 8)) {
 				if (write_textarea_to_file(value, STORAGE_CRONTAB_DIR, nvram_safe_get("http_username")))
 					restart_needed_bits |= event_mask;
@@ -2215,7 +2219,7 @@ static int rules_count_hook(int eid, webs_t wp, int argc, char **argv)
 	websWrite(wp, "function chnroute_count() { return '%s';}\n", count);
 #if defined(APP_SHADOWSOCKS)
 	memset(count, 0, sizeof(count));
-	fstream = popen("cat /etc/storage/gfwlist/gfwlist_listnew.conf |wc -l","r");
+	fstream = popen("cat /etc/storage/gfwlist/gfwlist_list.conf | wc -l", "r");
 	if(fstream) {
 		fgets(count, sizeof(count), fstream);
 		pclose(fstream);
@@ -2686,7 +2690,7 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 #else
 	int has_5g_vht = 0;
 #endif
-#if defined (USE_WID_5G) && (USE_WID_5G==7615 || USE_WID_5G==7915)
+#if defined (USE_WID_5G) && (USE_WID_5G==7612 || USE_WID_5G==7615 || USE_WID_5G==7915)
 	int has_5g_mumimo = 1;
 	int has_5g_txbf = 1;
 #if defined (BOARD_MT7615_DBDC) || defined (BOARD_MT7915_DBDC)

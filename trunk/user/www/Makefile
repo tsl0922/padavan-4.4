@@ -7,9 +7,9 @@ ROMFS_DIR = $(ROOTDIR)/romfs
 include $(BOARD_CONFIG)
 
 PROJECT_HOME_URL="https:\/\/bitbucket.org\/padavan\/rt-n56u\/"
-PROJECT_HOME_URL_MOD="https:\/\/github.com\/tsl0922\/padavan\/"
+PROJECT_HOME_URL_MOD="https:\/\/github.com\/fightroad\/padavan\/"
 
-LABEL_COPYRIGHT_TEXT='© 2011-2021 <a href="https:\/\/bitbucket.org\/padavan\/rt-n56u" target="blank">Padavan<\/a> \& N56U project community \& <a href="https:\/\/github.com\/hanwckf\/rt-n56u" target="blank">hanwckf<\/a> \& <a href="https:\/\/github.com\/tsl0922\/padavan" target="blank">tsl0922<\/a>'
+LABEL_COPYRIGHT_TEXT='© 2011-2024 <a href="https:\/\/bitbucket.org\/padavan\/rt-n56u" target="blank">Padavan<\/a> \& N56U project community \& <a href="https:\/\/github.com\/hanwckf\/rt-n56u" target="blank">hanwckf<\/a> \& <a href="https:\/\/github.com\/fightroad\/padavan" target="blank">fightroad<\/a>'
 
 BOARD_PATTERN=s/ZVMODELVZ/$(CONFIG_FIRMWARE_PRODUCT_ID)/g
 COPYR_PATTERN=s/ZVCOPYRVZ/$(LABEL_COPYRIGHT_TEXT)/g
@@ -230,10 +230,8 @@ endif
 ifneq ($(CONFIG_FIRMWARE_INCLUDE_SMARTDNS),y)
 	rm -f $(INSTALLDIR)/www/Advanced_smartdns.asp
 endif
-ifneq ($(CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER),y)
+ifneq ($(CONFIG_FIRMWARE_INCLUDE_OPENVPN),y)
 	rm -f $(INSTALLDIR)/www/vpnsrv.asp
-endif
-ifneq ($(CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT),y)
 	rm -f $(INSTALLDIR)/www/vpn_clients.asp
 	rm -f $(INSTALLDIR)/www/vpncli.asp
 endif

@@ -215,6 +215,7 @@ Adm_Svc_ttyd_enable=Enable ttyd?
 Adm_Svc_ttyd_port=ttyd Bind Port
 Adm_Svc_napt66=Enable napt66?(After reboot)
 Adm_Svc_vlmcsd=Enable vlmcsd?(KMS Activation)
+Adm_Svc_vlmcsd_desc=Windows System activation server
 Adm_Svc_lltd=LLTD (Link Layer Topology Discovery)?
 Adm_Svc_adsc=ASUS Info Discovery Service?
 Adm_Svc_crond=Cron Daemon (Scheduler)?
@@ -1857,3 +1858,4 @@ Login=Login
 BTN_FREEMEMORY=FreeMemory
 
 
+AP_Relay=AP Relay (Automatic Search Switching Channel Signal) [Click to Open Configuration Script]

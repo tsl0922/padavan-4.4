@@ -327,6 +327,9 @@ EOF
 ### \$2 - WAN interface name (e.g. eth3 or ppp0)
 ### \$3 - WAN IPv4 address
 
+### UPnP solution when router without external IP
+#echo "ext_ip=1.1.1.1" >> /etc/miniupnpd.conf && killall miniupnpd && miniupnpd -f /etc/miniupnpd.conf
+
 EOF
 		chmod 755 "$script_postw"
 	fi
@@ -496,6 +499,9 @@ dhcp-option=252,"\n"
 
 ### Log for all queries
 #log-queries
+
+### Keep DHCP host name valid at any times
+#dhcp-to-host
 
 EOF
 	if [ -f /usr/bin/vlmcsd ]; then

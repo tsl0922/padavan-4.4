@@ -1155,6 +1155,7 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_VLMCSD) == 0)
 		{
 			restart_vlmcsd();
+			restart_dhcpd();
 		}
 #endif
 #if defined(APP_ALIDDNS)

@@ -42,7 +42,7 @@
 			init_itoggle('ss_watchcat');
 			init_itoggle('ss_update_chnroute');
 			init_itoggle('ss_update_gfwlist');
-			init_itoggle('socks5_aenable');
+			init_itoggle('socks5_enable');
 			init_itoggle('ss_schedule_enable', change_on);
 			$j("#tab_ss_cfg, #tab_ss_add, #tab_ss_dlink, #tab_ss_ssl, #tab_ss_cli, #tab_ss_log, #tab_ss_help").click(
 				function () {
@@ -963,7 +963,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 			var s = document.getElementById(urlname + '-status');
 			if (!s)
 				return false;
-			var ssrurl = prompt("在这里黏贴配置链接 ssr:// | ss:// | vmess:// | vless:// | trojan://", "");
+			var ssrurl = prompt("在这里粘贴配置链接 ssr:// | ss:// | vmess:// | vless:// | trojan://", "");
 			if (ssrurl == null || ssrurl == "") {
 				s.innerHTML = "<font color='red'>用户取消</font>";
 				return false;
@@ -1056,7 +1056,8 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 				if (param != undefined) {
 				document.getElementById('ssp_name').value = decodeURI(param);
 				}				
-				s.innerHTML = "<font color='green'>导入Shadowsocks配置信息成功</font>";					}
+				s.innerHTML = "<font color='green'>导入Shadowsocks配置信息成功</font>";
+				}
 			 else {
 				var sstr = b64decsafe(url0);
 				document.getElementById('ssp_type').value = "ss";
@@ -1664,12 +1665,12 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																<option value="router"
 																	<% nvram_match_x("","ss_run_mode", "router","selected"); %>>
 																	绕过大陆IP模式</option>
-																<option value="all"
+																<!--<option value="all"
 																	<% nvram_match_x("","ss_run_mode", "all","selected"); %>>
 																	全局模式</option>
 																<option value="oversea"
 																	<% nvram_match_x("","ss_run_mode", "oversea","selected"); %>>
-																	海外用户回国模式</option>
+																	海外用户回国模式</option>-->
 															</select>
 														</td>
 													</tr>
@@ -1701,7 +1702,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<select name="pdnsd_enable" id="pdnsd_enable" class="input"
 																style="width: 200px;" onchange="switch_dns()">
 																<option value="0">使用dns2tcp查询</option>
-																<option value="1">使用其它服务器查询</option>
+																<!--<option value="1">使用其它服务器查询</option>-->
 															</select>
 														</td>
 													</tr>
@@ -1749,9 +1750,9 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td>
 															<select name="tunnel_forward" class="input"
 																style="width: 200px;">
-																<option value="8.8.4.4#53">Google Public DNS (8.8.4.4)
-																</option>
 																<option value="8.8.8.8#53">Google Public DNS (8.8.8.8)
+																</option>																
+																<option value="8.8.4.4#53">Google Public DNS (8.8.4.4)
 																</option>
 																<option value="208.67.222.222#53">OpenDNS
 																	(208.67.222.222)</option>
@@ -1810,7 +1811,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script19')"><span>订阅地址(一行一个地址):</span></a>
-															<div id="script19">
+															<div id="script19" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_dlink.sh"
@@ -2097,7 +2098,6 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															</td>
 														</tr>
 														<!--SSR参数结束-->
-														</tbody>
 														<tr id="row_s5_enable" style="display:none;">
 															<th>启用用户名/密码认证</th>
 															<td>
@@ -2446,7 +2446,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														</td>
 													</tr>
 													<tr>
-														<th colspan="2" style="background-color: #E3E3E3;">节点故障自动切换设置</th>
+														<th colspan="2" style="background-color: #E3E3E3;">服务守护设置</th>
 													</tr>
 													<tr>
 														<th>启用进程自动守护</th>
@@ -2535,7 +2535,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 													<tr>
 														<th width="50%">自定义国内IP更新地址:</th>
 														<td>
-															<input type="text" class="input" size="15"
+															<input type="text" class="input" size="20"
 																name="ss_chnroute_url" style="width: 200px"
 																value="<% nvram_get_x("","ss_chnroute_url"); %>" />
 														</td>
@@ -2581,6 +2581,15 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														</td>
 													</tr>
 													<tr>
+														<th width="50%">自定义GFW更新地址:</th>
+														<td>
+															<input type="text" class="input" size="20"
+																name="ss_gfwlist_url" style="width: 200px"
+																value="<% nvram_get_x("","ss_gfwlist_url"); %>" />
+														</td>
+													</tr>
+													<tr>
+													<tr>
 														<th>
 															<#menu5_16_19#>
 														</th>
@@ -2609,7 +2618,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script8')"><span>不走SS代理的LAN
 																	IP:</span></a>
-															<div id="script8">
+															<div id="script8" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_ip.sh"
@@ -2622,7 +2631,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script9')"><span>强制走SS代理的LAN
 																	IP:</span></a>
-															<div id="script9">
+															<div id="script9" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_bip.sh"
@@ -2634,7 +2643,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script13')"><span>游戏模式LAN IP（客户端UDP所有端口,TCP跟随主服务器端口模式,强制走绕过大陆模式）:</span></a>
-															<div id="script13">
+															<div id="script13" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_gmip.sh"
@@ -2647,7 +2656,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script11')"><span>强制走SS代理的WAN
 																	IP:</span></a>
-															<div id="script11">
+															<div id="script11" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_ip.sh"
@@ -2660,7 +2669,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script12')"><span>不走SS代理的WAN
 																	IP:</span></a>
-															<div id="script12">
+															<div id="script12" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_wan_ip.sh"
@@ -2672,7 +2681,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script10')"><span>强制走SS代理的域名:</span></a>
-															<div id="script10">
+															<div id="script10" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_dom.sh"
@@ -2684,7 +2693,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script15')"><span>不走SS代理的域名:</span></a>
-															<div id="script15">
+															<div id="script15" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.uss_dom.sh"

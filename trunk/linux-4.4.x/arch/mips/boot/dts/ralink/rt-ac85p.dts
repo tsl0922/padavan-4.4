@@ -10,12 +10,11 @@
 	model = "ASUS RT-AC85P";
 
 	chosen {
-		bootargs = "console=ttyS0,115200";
+		bootargs = "console=ttyS0,57600";
 	};
 
 	leds {
 		compatible = "gpio-leds";
-
 
 		power {
 			label = "power";
@@ -70,7 +69,6 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 
-			
 			partition@0 {
 				label = "Bootloader";
 				reg = <0x0 0xe0000>;
@@ -78,7 +76,7 @@
 			};
 
 			partition@e0000 {
-				label = "ubootenv";
+				label = "BootEnv";
 				reg = <0xe0000 0x100000>;
 				read-only;
 			};
@@ -97,22 +95,22 @@
 
 			partition@3e0000 {
 				label = "firmware";
-				reg = <0x3e0000 0x1800000>;
+				reg = <0x3e0000 0x3000000>;
 			};
-
-			partition@1BE0000  {
+			
+			partition@33e0000  {
 				label = "Config";
-				reg = <0x1BE0000 0x80000>;		/* 512k */
+				reg = <0x33e0000 0x100000>;
 			};
 
-			partition@1c60000 {
+			partition@34e0000 {
 				label = "Storage";
-				reg = <0x1c60000 0x400000>;		/* 4m */
+				reg = <0x34e0000 0x400000>;		
 			};
 
-			partition@2060000 {
+			partition@38e0000 {
 				label = "RWFS";
-				reg = <0x2060000 0x5F20000>;	
+				reg = <0x38e0000 0x46a0000>;
 			};
 
 			partition@all {
@@ -121,6 +119,7 @@
 			};
 
 		};
+			
 	};
 };
 

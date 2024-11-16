@@ -10,7 +10,7 @@ config WIREGUARD
 	select VFPv3 if CPU_V7
 	select NEON if CPU_V7
 	select KERNEL_MODE_NEON if CPU_V7
-	default m
+	default n
 	help
 	  WireGuard is a secure, fast, and easy to use replacement for IPsec
 	  that uses modern cryptography and clever networking tricks. It's
@@ -24,7 +24,6 @@ config WIREGUARD
 config WIREGUARD_DEBUG
 	bool "Debugging checks and verbose messages"
 	depends on WIREGUARD
-	default n
 	help
 	  This will write log messages for handshake and other events
 	  that occur for a WireGuard interface. It will also perform some

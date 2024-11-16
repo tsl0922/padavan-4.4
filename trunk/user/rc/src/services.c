@@ -354,6 +354,15 @@ void reset_dlink(void){
 #endif
 
 #if defined(APP_VLMCSD)
+int is_vlmcsd_run(void){
+	if (check_if_file_exist("/usr/bin/vlmcsd"))
+	{
+		if (pids("vlmcsd"))
+			return 1;
+	}
+	return 0;
+}
+
 void stop_vlmcsd(void){
 	eval("/usr/bin/vlmcsd.sh","stop");
 }
@@ -813,6 +822,9 @@ stop_services(int stopall)
 #endif
 #if defined(APP_MENTOHUST)
 	stop_mentohust();
+#endif
+#if defined(APP_VLMCSD)
+	stop_vlmcsd();
 #endif
 #if defined(APP_ADGUARDHOME)
 	stop_adguardhome();

@@ -160,6 +160,7 @@ out:
 	rcu_read_unlock_bh();
 	return ret;
 #else
+	kfree_skb(skb);
 	return -EAFNOSUPPORT;
 #endif
 }
@@ -194,7 +195,9 @@ int wg_socket_send_buffer_to_peer(struct wg_peer *peer, void *buffer,
 		return -ENOMEM;
 
 	skb_reserve(skb, SKB_HEADER_LEN);
+#ifndef ISPADAVAN
 	skb_set_inner_network_header(skb, 0);
+#endif
 	skb_put_data(skb, buffer, len);
 	return wg_socket_send_skb_to_peer(peer, skb, ds);
 }
@@ -217,7 +220,9 @@ int wg_socket_send_buffer_as_reply_to_skb(struct wg_device *wg,
 	if (unlikely(!skb))
 		return -ENOMEM;
 	skb_reserve(skb, SKB_HEADER_LEN);
+#ifndef ISPADAVAN
 	skb_set_inner_network_header(skb, 0);
+#endif
 	skb_put_data(skb, buffer, len);
 
 	if (endpoint.addr.sa_family == AF_INET)
@@ -241,7 +246,7 @@ int wg_socket_endpoint_from_skb(struct endpoint *endpoint,
 		endpoint->addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
 		endpoint->src4.s_addr = ip_hdr(skb)->daddr;
 		endpoint->src_if4 = skb->skb_iif;
-	} else if (skb->protocol == htons(ETH_P_IPV6)) {
+	} else if (IS_ENABLED(CONFIG_IPV6) && skb->protocol == htons(ETH_P_IPV6)) {
 		endpoint->addr6.sin6_family = AF_INET6;
 		endpoint->addr6.sin6_port = udp_hdr(skb)->source;
 		endpoint->addr6.sin6_addr = ipv6_hdr(skb)->saddr;
@@ -284,7 +289,7 @@ void wg_socket_set_peer_endpoint(struct wg_peer *peer,
 		peer->endpoint.addr4 = endpoint->addr4;
 		peer->endpoint.src4 = endpoint->src4;
 		peer->endpoint.src_if4 = endpoint->src_if4;
-	} else if (endpoint->addr.sa_family == AF_INET6) {
+	} else if (IS_ENABLED(CONFIG_IPV6) && endpoint->addr.sa_family == AF_INET6) {
 		peer->endpoint.addr6 = endpoint->addr6;
 		peer->endpoint.src6 = endpoint->src6;
 	} else {
@@ -308,7 +313,7 @@ void wg_socket_clear_peer_endpoint_src(struct wg_peer *peer)
 {
 	write_lock_bh(&peer->endpoint_lock);
 	memset(&peer->endpoint.src6, 0, sizeof(peer->endpoint.src6));
-	dst_cache_reset(&peer->endpoint_cache);
+	dst_cache_reset_now(&peer->endpoint_cache);
 	write_unlock_bh(&peer->endpoint_lock);
 }
 
@@ -334,7 +339,9 @@ static void sock_free(struct sock *sock)
 {
 	if (unlikely(!sock))
 		return;
+#ifndef ISPADAVAN
 	sk_clear_memalloc(sock);
+#endif
 	udp_tunnel_sock_release(sock->sk_socket);
 }
 
@@ -342,7 +349,9 @@ static void set_sock_opts(struct socket *sock)
 {
 	sock->sk->sk_allocation = GFP_ATOMIC;
 	sock->sk->sk_sndbuf = INT_MAX;
+#ifndef ISPADAVAN
 	sk_set_memalloc(sock->sk);
+#endif
 }
 
 int wg_socket_init(struct wg_device *wg, u16 port)
@@ -430,7 +439,7 @@ void wg_socket_reinit(struct wg_device *wg, struct sock *new4,
 	if (new4)
 		wg->incoming_port = ntohs(inet_sk(new4)->inet_sport);
 	mutex_unlock(&wg->socket_update_lock);
-	synchronize_rcu();
+	synchronize_net();
 	sock_free(old4);
 	sock_free(old6);
 }

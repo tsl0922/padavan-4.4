@@ -21,4 +21,3 @@ INDEX1_wds_ifname=wdsi
 INDEX1_apcli_ifname=apclii
 INDEX1_single_sku_path=/etc_ro/Wireless/SingleSKU_mt7615e-sku.dat
 INDEX1_bf_sku_path=/etc_ro/Wireless/SingleSKU_mt7615e-sku-bf.dat
-

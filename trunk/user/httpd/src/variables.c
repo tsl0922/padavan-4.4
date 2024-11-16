@@ -895,6 +895,7 @@
 			{"wl_guest_mcs_mode", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_KickStaRssiLow", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_AssocReqRssiThres", "", NULL, EVM_RESTART_WIFI5},
+			{"scripts.ap_script.sh", "File", NULL, EVM_RESTART_WIFI5},
 			{"RBRList", "Group", ARGV((char*)variables_WLANConfig11a_RBRList, "16", "32", "wl_wdsnum_x"), EVM_RESTART_WIFI5},
 #endif
 			{0,0,0,0}
@@ -957,9 +958,8 @@
 	struct variable variables_ZeroConf[] = {
 			{"zerotier_enable", "", NULL, EVM_RESTART_ZEROTIER},
 			{"zerotier_id", "", NULL, EVM_RESTART_ZEROTIER},
-		        {"zerotier_moonid", "", NULL, EVM_RESTART_ZEROTIER},
-			{"zerotiermoon_enable", "", NULL, EVM_RESTART_ZEROTIER},
-			{"zerotiermoon_ip", "", NULL, EVM_RESTART_ZEROTIER},
+		    {"zerotier_moonid", "", NULL, EVM_RESTART_ZEROTIER},
+            {"zerotier_planet", "", NULL, EVM_RESTART_ZEROTIER},
 			{"zerotier_nat", "", NULL, EVM_RESTART_ZEROTIER},
 			{"zero_staticnum_x", "", NULL, EVM_RESTART_ZEROTIER},
 			{"ZeroList", "Group", ARGV((char*)variables_ZeroConf_ZeroList, "8", "55", "zero_staticnum_x"), EVM_RESTART_ZEROTIER},
@@ -1100,6 +1100,7 @@
 			{"socks5_s_password","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"lan_con","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_chnroute_url","",NULL, FALSE},
+			{"ss_gfwlist_url","",NULL, FALSE},
 			{"ss_cgroups", "",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_cgoups_cpu_s", "",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_cgoups_mem_s", "",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1298,6 +1299,7 @@
 			{"rt_guest_mcs_mode", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_KickStaRssiLow", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_AssocReqRssiThres", "", NULL, EVM_RESTART_WIFI2},
+			{"scripts.ap_script.sh", "File", NULL, EVM_RESTART_WIFI2},
 			{"rt_RBRList", "Group", ARGV((char*)variables_WLANConfig11b_rt_RBRList, "16", "32", "rt_wdsnum_x"), EVM_RESTART_WIFI2},
 			{0,0,0,0}
 		};
@@ -1370,7 +1372,7 @@
 #if defined(USE_USB_SUPPORT)
 		{EVM_RESTART_MODEM,		EVT_RESTART_MODEM,		RCN_RESTART_MODEM,	EVM_RESTART_IPTV|EVM_RESTART_SWITCH_VLAN|EVM_RESTART_FIREWALL|EVM_RESTART_VPNCLI|EVM_RESTART_WAN},
 #endif
-		{EVM_RESTART_WAN,		EVT_RESTART_WAN,		RCN_RESTART_WAN,	EVM_RESTART_IPTV|EVM_RESTART_SWITCH_VLAN|EVM_RESTART_FIREWALL|EVM_RESTART_VPNCLI|EVM_RESTART_NETFILTER},
+		{EVM_RESTART_WAN,		EVT_RESTART_WAN,		RCN_RESTART_WAN,	EVM_RESTART_IPTV|EVM_RESTART_SWITCH_VLAN|EVM_RESTART_FIREWALL|EVM_RESTART_UPNP|EVM_RESTART_VPNCLI|EVM_RESTART_NETFILTER},
 		{EVM_RESTART_NETFILTER,		EVT_RESTART_NETFILTER,		RCN_RESTART_NETFILTER,	EVM_RESTART_FIREWALL},
 		{EVM_RESTART_RADV,		EVT_RESTART_RADV,		RCN_RESTART_RADV,	EVM_RESTART_DHCPD},
 		{EVM_RESTART_IPTV,		EVT_RESTART_IPTV,		RCN_RESTART_IPTV,	EVM_RESTART_FIREWALL},
@@ -1434,7 +1436,7 @@
 		{EVM_RESTART_TTYD,		EVT_RESTART_TTYD,		RCN_RESTART_TTYD,	0},
 #endif
 #if defined(APP_VLMCSD)
-		{EVM_RESTART_VLMCSD,	EVT_RESTART_VLMCSD,		RCN_RESTART_VLMCSD,	0},
+		{EVM_RESTART_VLMCSD,	EVT_RESTART_VLMCSD,		RCN_RESTART_VLMCSD,	EVM_RESTART_DHCPD},
 #endif
 #if defined(APP_ADGUARDHOME)
 		{EVM_RESTART_ADGUARDHOME,		EVT_RESTART_ADGUARDHOME,		RCN_RESTART_ADGUARDHOME,	0},

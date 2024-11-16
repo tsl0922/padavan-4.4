@@ -1,13 +1,13 @@
 include $(ROOTDIR)/rules.mk
 
 PKG_NAME:=libusb
-PKG_VERSION:=1.0.23
+PKG_VERSION:=1.0.27
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=\
   https://github.com/libusb/libusb/releases/download/v$(PKG_VERSION) \
   @SF/$(PKG_NAME)
-PKG_HASH:=db11c06e958a82dac52cf3c65cb4dd2c3f339c8a988665110e0d24d19312ad8d
+PKG_HASH:=ffaa41d741a8a3bee244ac8e54a72ea05bf2879663c098c82fc5757853441575
 
 include $(INCLUDE_DIR)/package.mk
 
